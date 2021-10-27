@@ -1,86 +1,4 @@
-def getID(rezervare):
-    """
-    Gasim ID-ul unei rezervari
-    :param rezervare: dictionar
-    :return: int
-    """
-    return rezervare["ID"]
-
-
-def getNume(rezervare):
-    """
-    Gasim numele unei rezervari
-    :param rezervare: dictionar
-    :return: str
-    """
-    return rezervare["nume"]
-
-
-def getClasa(rezervare):
-    """
-    Gasim clasa unei rezervari
-    :param rezervare: dictionar
-    :return: str
-    """
-    return rezervare["clasa"]
-
-
-def getPret(rezervare):
-    """
-    Gasim pretul unei rezervari
-    :param rezervare: dictionar
-    :return: float
-    """
-    return rezervare["pret"]
-
-
-def getCheckin(rezervare):
-    """
-    Gasim situatia checkin-ului unei rezervari
-    :param rezervare: dictionar
-    :return: str
-    """
-    return rezervare["checkin"]
-
-
-def setNume(rezervare, newNume):
-    """
-    Modificam numele unei rezervari
-    :param rezervare: dictionar
-    :param newNume: str
-    :return: str
-    """
-    rezervare["nume"] = newNume
-
-
-def setClasa(rezervare, newClasa):
-    """
-    Modificam clasa unei rezervari
-    :param rezervare: dictionar
-    :param newClasa: str
-    :return: str
-    """
-    rezervare["clasa"] = newClasa
-
-
-def setPret(rezervare, newPret):
-    """
-    Modificam pretul unei rezervari
-    :param rezervare: dictionar
-    :param newPret: float
-    :return: float
-    """
-    rezervare["pret"] = newPret
-
-
-def setCheckin(rezervare, newCheckin):
-    """
-    Modificam situatia checkin-ului unei rezervari
-    :param rezervare: dictionar
-    :param newCheckin: str
-    :return: str
-    """
-    rezervare["checkin"] = newCheckin
+from Domain.domain import getID, getNume, getPret, getClasa,getCheckin, setNume, setClasa, setPret, setCheckin
 
 
 def printList(lst):
@@ -137,7 +55,7 @@ def addDO(lst, ID, nume, clasa, pret, checkin):
     :param pret: float
     :param checkin: str
     """
-    rezervare = {"ID": ID, "nume": nume, "clasa": clasa, "pret": pret, "checkin": checkin}
+    rezervare = [ID, nume, clasa, pret, checkin]
     lst.append(rezervare)
 
 
@@ -158,7 +76,7 @@ def removeDO(lst, n):
     :param n: int
     :return: Lista rezultata in urma eliminarii
     """
-    newLst = [rezervare for rezervare in lst if rezervare["ID"] != n]
+    newLst = [rezervare for rezervare in lst if rezervare[0] != n]
     return newLst
 
 
@@ -206,14 +124,17 @@ def modifyDO(lst, ID, nume, clasa, pret, checkin):
     :param pret: float
     :param checkin: str
     """
+    for i in range(len(lst)):
+        if lst[i][0] == ID:
+            poz = i
     if nume != "":
-        setNume(lst[int(ID-1)], nume)
+        setNume(lst[int(poz)], nume)
     if clasa != "":
-        setClasa(lst[int(ID-1)], clasa)
+        setClasa(lst[int(poz)], clasa)
     if pret != "":
-        setPret(lst[int(ID-1)], pret)
+        setPret(lst[int(poz)], pret)
     if checkin != "":
-        setCheckin(lst[int(ID-1)], checkin)
+        setCheckin(lst[int(poz)], checkin)
 
 def printMenuClasa():
     print("Selectati optiunea pentru clasa")

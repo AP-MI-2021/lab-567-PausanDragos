@@ -20,7 +20,7 @@ def printMenu():
 
 
 def predifinedList():
-        return [{"ID": 1, "nume": "Vasilescu Andrei", "clasa": "bussines" ,"pret": 5000, "checkin": "DA"}]
+        return [[1, "Vasilescu Andrei", "Economy", 5000, "DA"]]
 
 
 def start():
