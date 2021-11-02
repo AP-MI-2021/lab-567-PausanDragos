@@ -1,4 +1,4 @@
-from Functions.functions import add, remove, modify, getID, getNume, getPret, getClasa, getCheckin, printList
+from Functions.functions import add, remove, modify, getID, getNume, getPret, getClasa, getCheckin, printList, get_higher_class, apply_discount
 
 
 def print_op1():
@@ -37,6 +37,12 @@ def start():
                 currentlist = remove(currentlist)
             elif n == "3":
                 modify(currentlist)
+        if n == "2":
+            name = input("Dati numele persoanei ale carei rezervari doriti sa le urcati la o clasa superioara:")
+            get_higher_class(currentlist, name)
+        if n == "3":
+            procentaj = int(input("Dati procentajul cu care doriti sa se ieftineasca rezervarile cu checkin"))
+            apply_discount(currentlist, procentaj)
         if n.lower() == "p":
             printList(currentlist)
         if n.lower() == "x":

@@ -30,7 +30,7 @@ def add(lst):
             elif clasa == "2":
                 clasa = "Economy plus"
             elif clasa == "3":
-                clasa = "Bussines"
+                clasa = "Business"
             break
     pret = float(input("Pretul biletului este: "))
     while True:
@@ -140,7 +140,7 @@ def printMenuClasa():
     print("Selectati optiunea pentru clasa")
     print("1. Economy")
     print("2. Economy plus")
-    print("3. Bussines")
+    print("3. Business")
 
 
 def printMenuCheckin():
@@ -168,14 +168,32 @@ def test_remove():
     assert getNume(test_list[0]) == "Ionescu Adi"
 
 
+def get_higher_class(lst, name):
+    for i in range(len(lst)):
+        if getNume(lst[i]) == name:
+            if getClasa(lst[i]) == "Economy":
+                setClasa(lst[i], "Economy plus")
+            elif getClasa(lst[i]) == "Economy plus":
+                setClasa(lst[i], "Business")
+            elif getClasa(lst[i]) == "Business":
+                print("Aceasta clasa este cea mai superioara ")
+
+
+def apply_discount(lst, procentaj):
+    for i in range(len(lst)):
+        if getCheckin(lst[i]) == "DA":
+            new_price = (100 -procentaj) / 100 * getPret(lst[i])
+            setPret(lst[i], new_price)
+
+
 def test_modify():
     test_list = []
     addDO(test_list, 1, "Popesecu Ioan", "Economy", 500.3, "NU")
     addDO(test_list, 2, "Ionescu Adi", "Economy plus", 550.3, "DA")
-    modifyDO(test_list, 2, "Ionescu Adrian", "Bussines", 550.3, "DA")
+    modifyDO(test_list, 2, "Ionescu Adrian", "Business", 550.3, "DA")
     assert len(test_list) == 2
     assert getNume(test_list[1]) == "Ionescu Adrian"
-    assert getClasa(test_list[1]) == "Bussines"
+    assert getClasa(test_list[1]) == "Business"
 
 def test_functions():
     test_remove()
