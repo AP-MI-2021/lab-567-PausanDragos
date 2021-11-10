@@ -1,6 +1,24 @@
 from Domain.domain import getID, getNume, getPret, getClasa,getCheckin, setNume, setClasa, setPret, setCheckin
 
 
+def copyTheList(lst):
+    """
+    Copiaza lista
+    :param lst:lista curenta
+    :type lst: lista de liste
+    :return: aceeasi lista, dar diferita in memorie
+    :rtype: lista de liste
+    """
+    newLst = []
+    for elem in lst:
+        if isinstance(elem, list):
+          value = copyTheList(elem)
+          newLst.append(value)
+        else:
+            newLst.append(elem)
+    return newLst
+
+
 def printList(lst):
     """
     Printam lista
@@ -14,7 +32,7 @@ def printList(lst):
 
 
 
-def add(lst):
+def add(lst, undolst, redolst):
     """
     Citim un dictionar
     :param lst: list
@@ -28,7 +46,7 @@ def add(lst):
             if clasa == "1":
                 clasa = "Economy"
             elif clasa == "2":
-                clasa = "Economy plus"
+                clasa = "EconomyPlus"
             elif clasa == "3":
                 clasa = "Business"
             break
@@ -42,10 +60,10 @@ def add(lst):
             elif checkin == "2":
                 checkin = "NU"
             break
-    addDO(lst, ID, nume, clasa, pret, checkin)
+    addDO(lst, ID, nume, clasa, pret, checkin, undolst, redolst)
 
 
-def addDO(lst, ID, nume, clasa, pret, checkin):
+def addDO(lst, ID, nume, clasa, pret, checkin, undolst, redolst):
     """
     Adaugam un dictionar in lista
     :param lst: list
@@ -55,38 +73,41 @@ def addDO(lst, ID, nume, clasa, pret, checkin):
     :param pret: float
     :param checkin: str
     """
+    redolst = []
+    undolst.append(copyTheList(lst))
     rezervare = [ID, nume, clasa, pret, checkin]
     lst.append(rezervare)
 
 
-def remove(lst):
+def remove(lst, undolst, redolst):
     """
     Citim ID-ul inregistrarii pe care dorim sa o eliminam
     :param lst: list
     :return:
     """
     n = int(input("Alegeti ID-ul inregistrarii pe care doriti sa fie stearsa: "))
-    return removeDO(lst, n)
+    return removeDO(lst, n, undolst, redolst)
 
 
-def removeDO(lst, n):
+def removeDO(lst, n, undolst, redolst):
     """
     Eliminam un dictionar din lista
     :param lst: list
     :param n: int
     :return: Lista rezultata in urma eliminarii
     """
+    redolst = []
+    undolst.append(copyTheList(lst))
     newLst = [rezervare for rezervare in lst if rezervare[0] != n]
     return newLst
 
 
-def modify(lst):
+def modify(lst, undolst, redolst):
     """
     Citim modificarile dorite unui dictionar din lista
     :param lst: list
     :return: Lst, daca nu se efectueaza modificari asupra ei
     """
-
     printList(lst)
     try:
         ID = int(input("Alegeti ID-ul inregistrarii pe care doriti sa o modificati(lasati liber daca nu vreti actualizare): "))
@@ -111,10 +132,10 @@ def modify(lst):
             checkin = ""
     else:
         return lst
-    modifyDO(lst, ID, nume, clasa, pret, checkin)
+    modifyDO(lst, ID, nume, clasa, pret, checkin, undolst, redolst)
 
 
-def modifyDO(lst, ID, nume, clasa, pret, checkin):
+def modifyDO(lst, ID, nume, clasa, pret, checkin, undolst, redolst):
     """
     Modificam un dictionar din lista
     :param lst: list
@@ -124,6 +145,8 @@ def modifyDO(lst, ID, nume, clasa, pret, checkin):
     :param pret: float
     :param checkin: str
     """
+    redolst = []
+    undolst.append(copyTheList(lst))
     for i in range(len(lst)):
         if lst[i][0] == ID:
             poz = i
@@ -139,7 +162,7 @@ def modifyDO(lst, ID, nume, clasa, pret, checkin):
 def printMenuClasa():
     print("Selectati optiunea pentru clasa")
     print("1. Economy")
-    print("2. Economy plus")
+    print("2. EconomyPlus")
     print("3. Business")
 
 
@@ -149,53 +172,129 @@ def printMenuCheckin():
     print("2. Nu doresc Checkin")
 
 
-def test_add():
-    test_list = []
-    addDO(test_list, 1, "Popescu Ioan", "Economy", 500.3, "NU")
-    assert len(test_list) == 1
-    assert getID(test_list[0]) == 1
-    assert getNume(test_list[0]) == "Popescu Ioan"
-    assert getClasa(test_list[0]) == "Economy"
-
-
-def test_remove():
-    test_list = []
-    addDO(test_list, 1, "Popesecu Ioan", "Economy", 500.3, "NU")
-    addDO(test_list, 2, "Ionescu Adi", "Economy plus", 550.3, "DA")
-    test_list = removeDO(test_list, 1)
-    assert len(test_list) == 1
-    assert getID(test_list[0]) == 2
-    assert getNume(test_list[0]) == "Ionescu Adi"
-
-
-def get_higher_class(lst, name):
+def get_higher_class(lst, name, undolst, redolst):
+    """
+    Se trec toate rezervarile facute pe un nume la o clasa superioara
+    :param lst: list
+    :param name: str
+    :param undolst: list
+    :param redolst: list
+    """
+    redolst = []
+    undolst.append(copyTheList(lst))
     for i in range(len(lst)):
         if getNume(lst[i]) == name:
             if getClasa(lst[i]) == "Economy":
-                setClasa(lst[i], "Economy plus")
-            elif getClasa(lst[i]) == "Economy plus":
+                setClasa(lst[i], "EconomyPlus")
+            elif getClasa(lst[i]) == "EconomyPlus":
                 setClasa(lst[i], "Business")
-            elif getClasa(lst[i]) == "Business":
-                print("Aceasta clasa este cea mai superioara ")
 
 
-def apply_discount(lst, procentaj):
+def apply_discount(lst, procentaj, undolst, redolst):
+    """
+    Se aplica discount tuturor rezervarilor care au facut checkin-ul
+    :param lst: list
+    :param procentaj: float
+    :param undolst: list
+    :param redolst: list
+    """
+    redolst = []
+    undolst.append(copyTheList(lst))
     for i in range(len(lst)):
         if getCheckin(lst[i]) == "DA":
-            new_price = (100 -procentaj) / 100 * getPret(lst[i])
+            new_price = (100 - procentaj) / 100 * getPret(lst[i])
+            new_price = round(new_price, 2)
             setPret(lst[i], new_price)
 
 
-def test_modify():
-    test_list = []
-    addDO(test_list, 1, "Popesecu Ioan", "Economy", 500.3, "NU")
-    addDO(test_list, 2, "Ionescu Adi", "Economy plus", 550.3, "DA")
-    modifyDO(test_list, 2, "Ionescu Adrian", "Business", 550.3, "DA")
-    assert len(test_list) == 2
-    assert getNume(test_list[1]) == "Ionescu Adrian"
-    assert getClasa(test_list[1]) == "Business"
+def determine_max(lst):
+    """
+    Se determina pretul maxim al fiecarei clase
+    :param lst: list
+    :return: Valorile maxime gasite pentru fiecare clasa
+    """
+    max_econ = -1
+    max_econ_plus = -1
+    max_bus = -1
+    for i in range(len(lst)):
+        if getClasa(lst[i]) == "Economy":
+            max_econ = max(getPret(lst[i]), max_econ)
+        elif getClasa(lst[i]) == "EconomyPlus":
+            max_econ_plus = max(getPret(lst[i]), max_econ_plus)
+        elif getClasa(lst[i]) == "Business":
+            max_bus = max(getPret(lst[i]), max_bus)
+    return max_econ, max_econ_plus, max_bus
 
-def test_functions():
-    test_remove()
-    test_add()
-    test_modify()
+
+def order_by_price(lst, undolst, redolst):
+    """
+    Se ordoneaza lista crescator dupa pretul rezervarilor
+    :param lst: list
+    :param undolst: list
+    :param redolst: list
+    :return: Lista formata in urma ordonarii
+    """
+    redolst = []
+    undolst.append(copyTheList(lst))
+    lst.sort(key=getPret)
+    return lst
+
+
+def get_sums_for_names(lst):
+    """
+    Se efectueaza suma preturilor tuturor inregistrarilor facute pentru fiecare nume
+    :param lst: list
+    :return: O lista cu numele fiecarei persoane care a facut cel putin o rezervare si o lista cu pretul inregistrarilor
+            facute de fiecare persoana
+    """
+    j = 0
+    nameLst = []
+    priceLst = []
+    for i in range(len(lst)):
+        if getNume(lst[i]) not in nameLst:
+            nameLst.append(getNume(lst[i]))
+            priceLst.append(0)
+    while j < len(nameLst):
+        for i in range(len(lst)):
+            if nameLst[j] == getNume(lst[i]):
+                priceLst[j] += getPret(lst[i])
+        j += 1
+    return nameLst, priceLst
+
+
+def undo(lst, undolst, redolst):
+    """
+    Undo la lista curenta
+    :param lst: list
+    :param undolst: list
+    :param redolst: list
+    :return: Lista rezultata dupa efectuarea undo-ului
+    """
+    if len(undolst) > 0:
+        redolst.append(copyTheList(lst))
+        lst = undolst[len(undolst) - 1]
+        undolst.pop(len(undolst) - 1)
+        print("Undo-ul s-a realizat")
+    else:
+        print("Nicio modificare facuta")
+    return lst
+
+
+def redo(lst, undolst, redolst):
+    """
+    Redo la lista curenta
+    :param lst: list
+    :param undolst: list
+    :param redolst: list
+    :return: Lista rezultata dupa efectuarea redo-ului
+    """
+    if len(redolst) > 0:
+        undolst.append(copyTheList(lst))
+        lst = redolst[len(redolst) - 1]
+        redolst.pop(len(redolst) - 1)
+        print("Redo-ul s-a realizat")
+    else:
+        print("Nu se poate efectua redo")
+    return lst
+
+
